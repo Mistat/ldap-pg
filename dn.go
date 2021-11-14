@@ -127,6 +127,9 @@ func (d *DN) DNNormStr() string {
 }
 
 func (d *DN) DNNormStrWithoutSuffix(suffix *DN) string {
+	if d == nil {
+		return ""
+	}
 	sRDNs := suffix.RDNs
 	diff := len(d.RDNs) - len(sRDNs)
 
@@ -175,6 +178,12 @@ func (d *DN) DNOrigEncodedStrWithoutSuffix(suffix *DN) string {
 }
 
 func (d *DN) RDNNormStr() string {
+	if d == nil {
+		return ""
+	}
+	if len (d.RDNs) == 0 {
+		return ""
+	}
 	var b strings.Builder
 	b.Grow(128)
 	for i, attr := range d.RDNs[0].Attributes {
