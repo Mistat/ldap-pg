@@ -343,13 +343,17 @@ func (r *HybridRepository) Insert(ctx context.Context, entry *AddEntry) (int64, 
 		return 0, err
 	}
 
+
 	if entry.DN().Equal(r.server.Suffix) {
 		// Insert level 0
 		newID, err = r.insertLevel0(tx, dbEntry)
-
 	} else {
-		// Insert level 1+
-		newID, err = r.insertInternal(tx, dbEntry)
+		if len(entry.DN().RDNs) == 1 {
+			newID, err = r.insertLevel0(tx, dbEntry)
+		} else {
+			// Insert level 1+
+			newID, err = r.insertInternal(tx, dbEntry)
+		}
 	}
 
 	if err != nil {
