@@ -59,10 +59,6 @@ func (s *SchemaMap) ValidateObjectClass(ocs []string, attrs map[string]*SchemaVa
 		}
 
 		for _, mv := range oc.Must() {
-			// TODO: Workaround domainComponent alias -> dc
-			if mv == "domainComponent" {
-				mv = "dc"
-			}
 			_, ok := attrs[mv]
 			if !ok {
 				// e.g.
@@ -214,19 +210,11 @@ func (o *ObjectClass) May() []string {
 
 func (o *ObjectClass) Contains(a string) bool {
 	for _, v := range o.Must() {
-		// TODO: Workaround domainComponent alias -> dc
-		if v == "domainComponent" {
-			v = "dc"
-		}
 		if strings.ToLower(v) == strings.ToLower(a) {
 			return true
 		}
 	}
 	for _, v := range o.May() {
-		// TODO: Workaround domainComponent alias -> dc
-		if v == "domainComponent" {
-			v = "dc"
-		}
 		if strings.ToLower(v) == strings.ToLower(a) {
 			return true
 		}
@@ -342,10 +330,6 @@ func parseSchema(server *Server, m *SchemaMap, schemaDef string) {
 }
 
 func parseObjectClass(server *Server, schemaDef *SchemaMap, rawSchemaDef string) error {
-	isDefined := func(a string) bool {
-		_, ok := schemaDef.AttributeType(a)
-		return ok
-	}
 	for _, line := range strings.Split(strings.TrimSuffix(rawSchemaDef, "\n"), "\n") {
 		stype, oid := parseOid(line)
 
@@ -377,36 +361,27 @@ func parseObjectClass(server *Server, schemaDef *SchemaMap, rawSchemaDef string)
 			if mmust != nil {
 				for _, v := range strings.Split(mmust[1], "$") {
 					v = strings.TrimSpace(v)
-					if !isDefined(v) {
-						// log.Printf("warn: %s of %s isn't defined as attributeType in the schema", v, name)
-						// return xerrors.Errorf("%s of %s isn't defined as attributeType in the schema", v, name)
+					if attr, ok := schemaDef.AttributeType(v); ok {
+						oc.must = append(oc.must, attr.Name)
 					}
-					oc.must = append(oc.must, strings.TrimSpace(v))
 				}
 			} else if must != nil {
-				if !isDefined(must[1]) {
-					// log.Printf("warn: %s of %s isn't defined as attributeType in the schema", must[1], name)
-					// return xerrors.Errorf("%s of %s isn't defined as attributeType in the schema", must[1], name)
+				if attr, ok := schemaDef.AttributeType(must[1]); ok {
+					oc.must = append(oc.must, attr.Name)
 				}
-				oc.must = append(oc.must, must[1])
 			}
 			if mmay != nil {
 				for _, v := range strings.Split(mmay[1], "$") {
 					v = strings.TrimSpace(v)
-					if !isDefined(v) {
-						// log.Printf("warn: %s of %s isn't defined as attributeType in the schema", v, name)
-						// return xerrors.Errorf("%s of %s isn't defined as attributeType in the schema", v, name)
+					if attr, ok := schemaDef.AttributeType(v); ok {
+						oc.may = append(oc.may, attr.Name)
 					}
-					oc.may = append(oc.may, strings.TrimSpace(v))
 				}
 			} else if may != nil {
-				if !isDefined(may[1]) {
-					// log.Printf("warn: %s of %s isn't defined as attributeType in the schema", may[1], name)
-					// return xerrors.Errorf("%s of %s isn't defined as attributeType in the schema", may[1], name)
+				if attr, ok := schemaDef.AttributeType(may[1]); ok {
+					oc.may = append(oc.may, attr.Name)
 				}
-				oc.may = append(oc.may, may[1])
 			}
-
 			schemaDef.PutObjectClass(oc.Name, oc)
 		}
 	}
