@@ -59,6 +59,10 @@ func (s *SchemaMap) ValidateObjectClass(ocs []string, attrs map[string]*SchemaVa
 		}
 
 		for _, mv := range oc.Must() {
+			// TODO: Workaround domainComponent alias -> dc
+			if mv == "domainComponent" {
+				mv = "dc"
+			}
 			_, ok := attrs[mv]
 			if !ok {
 				// e.g.
@@ -210,11 +214,19 @@ func (o *ObjectClass) May() []string {
 
 func (o *ObjectClass) Contains(a string) bool {
 	for _, v := range o.Must() {
+		// TODO: Workaround domainComponent alias -> dc
+		if v == "domainComponent" {
+			v = "dc"
+		}
 		if strings.ToLower(v) == strings.ToLower(a) {
 			return true
 		}
 	}
 	for _, v := range o.May() {
+		// TODO: Workaround domainComponent alias -> dc
+		if v == "domainComponent" {
+			v = "dc"
+		}
 		if strings.ToLower(v) == strings.ToLower(a) {
 			return true
 		}
