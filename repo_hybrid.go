@@ -1401,15 +1401,17 @@ func (r *HybridRepository) collectScopeWhereSQL(baseDN *DN, option *SearchOption
 	// 2: sub (subtree, include base)
 	// 3: children (subtree, not include base)
 	if option.Scope == 0 || option.Scope == 1 {
-		var col string
-		if option.Scope == 0 {
-			col = "id"
-		} else {
-			col = "parent_id"
-		}
-		where.WriteString(`e.`)
-		where.WriteString(col)
-		where.WriteString(` = (SELECT
+		dn := baseDN.RDNNormStr()
+		if dn != "" {
+			var col string
+			if option.Scope == 0 {
+				col = "id"
+			} else {
+				col = "parent_id"
+			}
+			where.WriteString(`e.`)
+			where.WriteString(col)
+			where.WriteString(` = (SELECT
 					e.id
 				FROM
 					ldap_entry e
@@ -1417,12 +1419,14 @@ func (r *HybridRepository) collectScopeWhereSQL(baseDN *DN, option *SearchOption
 				WHERE
 					e.rdn_norm = :rdn_norm
 					AND c.dn_norm = :parent_dn_norm)`)
-		params["rdn_norm"] = baseDN.RDNNormStr()
-		params["parent_dn_norm"] = baseDN.ParentDN().DNNormStrWithoutSuffix(r.server.Suffix)
-
+			params["rdn_norm"] = baseDN.RDNNormStr()
+			params["parent_dn_norm"] = baseDN.ParentDN().DNNormStrWithoutSuffix(r.server.Suffix)
+		} else {
+			where.WriteString("true")
+		}
 	} else {
 		var subWhere string
-		if baseDN.Equal(r.server.Suffix) {
+		if baseDN.DNNormStr() == "" || baseDN.Equal(r.server.Suffix) {
 			subWhere = `
 				e.parent_id IN (
 					SELECT

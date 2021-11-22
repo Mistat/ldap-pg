@@ -295,7 +295,13 @@ func (d *DN) Move(newParentDN *DN) (*DN, error) {
 }
 
 func (d *DN) ParentDN() *DN {
+	if d == nil {
+		return nil
+	}
 	if d.IsRoot() {
+		return nil
+	}
+	if len(d.RDNs) == 0 {
 		return nil
 	}
 

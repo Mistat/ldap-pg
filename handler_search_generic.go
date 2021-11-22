@@ -52,11 +52,11 @@ func handleSearch(s *Server, w ldap.ResponseWriter, m *ldap.Message) {
 	}
 
 	// Always return no such object
-	if string(r.BaseObject()) == "" {
-		res := ldap.NewSearchResultDoneResponse(ldap.LDAPResultNoSuchObject)
-		w.Write(res)
-		return
-	}
+	//if string(r.BaseObject()) == "" {
+	//	res := ldap.NewSearchResultDoneResponse(ldap.LDAPResultNoSuchObject)
+	//	w.Write(res)
+	//	return
+	//}
 
 	// Phase 1: normalize DN
 	baseDN, err := s.NormalizeDN(string(r.BaseObject()))
