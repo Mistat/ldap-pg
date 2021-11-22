@@ -14,6 +14,7 @@
     - [x] SSHA
     - [x] SSHA256
     - [x] SSHA512
+    - [x] ARGON2
     - [x] Pass-through authentication (Support `{SASL}foo@domain` format)
   - Search
     - [x] base
