@@ -74,6 +74,9 @@ func (s *Server) RequiredAuthz(m *ldap.Message, ops LDAPAction, targetDN *DN) bo
 			authorized = s.simpleACL.CanRead(session)
 		}
 
+		if session.DN.DNNormStr() == targetDN.DNNormStr() {
+			return true
+		}
 		log.Printf("info: Authorized: %v, action: %s, authorizedDN: %s, targetDN: %s", authorized, ops.String(), session.DN.DNNormStr(), targetDN.DNNormStr())
 
 		return authorized
