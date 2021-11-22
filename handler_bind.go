@@ -166,7 +166,8 @@ func validateCred(s *Server, input, cred string) bool {
 
 	} else if len(cred) > 10 && string(cred[0:9]) == "{SSHA512}" {
 		ok, err = ssha512.Validate(input, cred)
-
+	} else if len(cred) > 9 && string(cred[0:8]) == "{ARGON2}" {
+		ok, err = comparePasswordAndHash(input, cred)
 	} else if len(cred) > 7 && string(cred[0:6]) == "{SASL}" {
 		ok, err = doPassThrough(s, input, cred[6:])
 	} else {
