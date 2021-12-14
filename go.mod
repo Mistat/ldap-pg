@@ -1,4 +1,4 @@
-module github.com/openstandia/ldap-pg
+module github.com/Mistat/ldap-pg
 
 go 1.17
 
