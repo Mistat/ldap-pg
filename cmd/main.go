@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/Mistat/ldap-pg"
 	"log"
 	"os"
 	"os/signal"
@@ -145,23 +146,10 @@ var (
 	)
 )
 
-type arrayFlags []string
-
-func (i *arrayFlags) String() string {
-	return strings.Join(*i, "\n")
-}
-
-func (i *arrayFlags) Set(value string) error {
-	*i = append(*i, value)
-	return nil
-}
-
-var customSchema arrayFlags
-
 func main() {
-	fs.Var(&customSchema, "schema", "Additional/overwriting custom schema")
+	fs.Var(&ldap_pg.CustomSchema, "schema", "Additional/overwriting custom schema")
 
-	var aclFlags arrayFlags
+	var aclFlags ldap_pg.ArrayFlags
 	fs.Var(&aclFlags, "acl", `Simple ACL: the format is <DN(User, Group or empty(everyone))>:<Scope(R, W or RW)>:<Invisible Attributes> (e.g. cn=reader,dc=example,dc=com:R:userPassword,telephoneNumber)`)
 
 	fmt.Fprintf(os.Stdout, "ldap-pg %s (rev: %s)\n", version, revision)
@@ -182,9 +170,9 @@ func main() {
 	rootPW := *rootpw
 	*rootpw = ""
 
-	passThroughConfig := &PassThroughConfig{}
+	passThroughConfig := &ldap_pg.PassThroughConfig{}
 	if *passThroughLDAPDomain != "" {
-		passThroughConfig.Add(*passThroughLDAPDomain, &LDAPPassThroughClient{
+		passThroughConfig.Add(*passThroughLDAPDomain, &ldap_pg.LDAPPassThroughClient{
 			Server:     *passThroughLDAPServer,
 			SearchBase: *passThroughLDAPSearchBase,
 			Timeout:    *passThroughLDAPTimeout,
@@ -205,7 +193,7 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	server := NewServer(&ServerConfig{
+	server := ldap_pg.NewServer(&ldap_pg.ServerConfig{
 		DBHostName:        *dbHostName,
 		DBPort:            *dbPort,
 		DBName:            *dbName,
@@ -228,7 +216,7 @@ func main() {
 		DefaultPPolicyDN:  *defaultPPolicyDN,
 	})
 
-	go server.Start()
+	go server.Start(*bindAddress)
 
 	<-ctx.Done()
 	_, cancel := context.WithTimeout(context.Background(), 5*time.Second)

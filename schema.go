@@ -1,4 +1,4 @@
-package main
+package ldap_pg
 
 import (
 	"fmt"
@@ -8,6 +8,19 @@ import (
 	"strconv"
 	"strings"
 )
+
+type ArrayFlags []string
+
+func (a *ArrayFlags) String() string {
+	return strings.Join(*a, "\n")
+}
+
+func (a *ArrayFlags) Set(s string) error {
+	*a = append(*a, s)
+	return nil
+}
+
+var CustomSchema ArrayFlags
 
 func NewSchema(server *Server) *SchemaMap {
 	return &SchemaMap{
@@ -225,7 +238,7 @@ func (o *ObjectClass) Contains(a string) bool {
 func InitSchemaMap(server *Server) *SchemaMap {
 	m := NewSchema(server)
 
-	mergedSchema = mergeSchema(SCHEMA_OPENLDAP24, customSchema)
+	mergedSchema = mergeSchema(SCHEMA_OPENLDAP24, CustomSchema)
 	parseSchema(server, m, mergedSchema)
 	err := parseObjectClass(server, m, mergedSchema)
 	if err != nil {

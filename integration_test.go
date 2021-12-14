@@ -1,8 +1,9 @@
 //go:build integration
 
-package main
+package ldap_pg
 
 import (
+	"github.com/Mistat/ldap-pg/cmd"
 	"os"
 	"testing"
 
@@ -1396,12 +1397,12 @@ func TestAssociation(t *testing.T) {
 }
 
 func TestAssociationWithCustomSchema(t *testing.T) {
-	customSchema = []string{
+	cmd.customSchema = []string{
 		"objectClasses: ( 2.5.6.9 NAME 'groupOfNames' DESC 'RFC2256: a group of names (DNs)' SUP top STRUCTURAL MUST cn MAY ( businessCategory $ seeAlso $ owner $ ou $ o $ description $ member $ uniqueMember $ displayName ) )",
 	}
 	testServer.LoadSchema()
 	defer func() {
-		customSchema = []string{}
+		cmd.customSchema = []string{}
 		testServer.LoadSchema()
 	}()
 

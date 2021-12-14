@@ -1,4 +1,4 @@
-package main
+package ldap_pg
 
 // ldapsearch -o ldif-wrap=no -H ldap://... -x -D "cn=..." -b "cn=Subschema" -v -s base attributeTypes comparators ditContentRules ditStructureRules ldapSyntaxes matchingRules matchingRuleUse nameForms normalizers objectClasses syntaxCheckers
 var BASE_SCHEMA_OPENLDAP24 string = `

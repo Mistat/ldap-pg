@@ -1,4 +1,4 @@
-package main
+package ldap_pg
 
 type AddEntry struct {
 	schemaMap  *SchemaMap

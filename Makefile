@@ -20,13 +20,13 @@ build: $(SRCS)
 	@mkdir -p bin
 	@echo "Building $(GOOS)-$(GOARCH)"
 ifeq ($(GOOS),darwin)
-	go build -o bin $(DARWIN_OPTS)
+	go build -o bin/ldap-pg $(DARWIN_OPTS) cmd/main.go
 endif
 ifeq ($(GOOS),linux)
-	go build -o bin $(LINUX_OPTS)
+	go build -o bin/ldap-pg $(LINUX_OPTS) cmd/main.go
 endif
 ifeq ($(GOOS),windows)
-	go build -o bin $(WINDOWS_OPTS)
+	go build -o bin/ldap-pg $(WINDOWS_OPTS) cmd/main.go
 endif
 
 .PHONY: clean

@@ -1,4 +1,4 @@
-package main
+package ldap_pg
 
 import (
 	"crypto/tls"
@@ -94,7 +94,7 @@ func (s *Server) Repo() Repository {
 	return s.repo
 }
 
-func (s *Server) Start() {
+func (s *Server) Start(bindAddress string) {
 	// Init logging
 	cl := colog.NewCoLog(os.Stdout, "worker ", log.LstdFlags)
 
@@ -232,10 +232,10 @@ func (s *Server) Start() {
 	// Optional config
 	server.MaxRequestSize = 5 * 1024 * 1024 // 5MB
 
-	log.Printf("info: Starting ldap-pg on %s", *bindAddress)
+	log.Printf("info: Starting ldap-pg on %s", bindAddress)
 
 	// listen and serve
-	server.ListenAndServe(*bindAddress)
+	server.ListenAndServe(bindAddress)
 }
 
 func (s *Server) LoadSchema() {
