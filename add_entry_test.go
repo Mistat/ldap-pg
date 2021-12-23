@@ -75,6 +75,17 @@ func TestAddEntryValidate(t *testing.T) {
 			},
 			NewInvalidPerSyntax("objectClass", 1),
 		},
+
+		{
+			"cn=abc,ou=Users,dc=example,dc=com",
+			map[string][]string{
+				"objectClass": {"person", "uknown"},
+				"cn":          {"abc"},
+				"cn;lang-ja":   {"あいう"},
+				"sn":          {"efg"},
+			},
+			NewInvalidPerSyntax("objectClass", 1),
+		},
 	}
 	server := NewServer(&ServerConfig{
 		Suffix: "dc=example,dc=com",

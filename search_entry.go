@@ -24,16 +24,25 @@ func (j *SearchEntry) GetAttrsOrig() map[string][]string {
 }
 
 func (j *SearchEntry) GetAttrOrig(attrName string) (string, []string, bool) {
-	s, ok := j.schemaMap.AttributeType(attrName)
+	name, lang, err := ParseLanguageTag(attrName)
+	if err != nil {
+		return "", nil, false
+	}
+	s, ok := j.schemaMap.AttributeType(name)
 	if !ok {
 		return "", nil, false
 	}
 
-	v, ok := j.attributes[s.Name]
+	name = s.Name
+	if lang != "" {
+		name = name + ";" + lang
+	}
+
+	v, ok := j.attributes[name]
 	if !ok {
 		return "", nil, false
 	}
-	return s.Name, v, true
+	return name, v, true
 }
 
 func (j *SearchEntry) GetAttrsOrigWithoutOperationalAttrs() map[string][]string {

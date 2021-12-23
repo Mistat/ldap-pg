@@ -28,6 +28,11 @@ func TestNewSchemaValue(t *testing.T) {
 			[]string{" a  B c "},
 			[]string{"a b c"},
 		},
+		{
+			"cn;lang-ja",
+			[]string{"あああ"},
+			[]string{"あああ"},
+		},
 	}
 	server := NewServer(&ServerConfig{
 		Suffix: "dc=example,dc=com",

@@ -89,11 +89,22 @@ func (j *AddEntry) addsv(value *SchemaValue) error {
 	current, ok := j.attributes[name]
 	if !ok {
 		j.attributes[name] = value
-		return nil
+		//return nil
 	} else {
 		// When adding the attribute with same value as both DN and attribute,
 		// we need to ignore the duplicate error.
 		current.Add(value)
+	}
+	langTag := value.LanguageTag()
+	if langTag != "" {
+		name = name + ";" + langTag
+		current, ok := j.attributes[name]
+		if !ok {
+			j.attributes[name] = value
+			return nil
+		} else {
+			current.Add(value)
+		}
 	}
 	return nil
 }

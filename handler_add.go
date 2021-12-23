@@ -38,6 +38,7 @@ func handleAdd(s *Server, w ldap.ResponseWriter, m *ldap.Message) {
 
 	addEntry, err := mapper.LDAPMessageToAddEntry(dn, r.Attributes())
 	if err != nil {
+		log.Printf("error: ")
 		responseAddError(w, err)
 		return
 	}

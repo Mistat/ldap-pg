@@ -2,12 +2,11 @@ package ldap_pg
 
 import (
 	"context"
-	"log"
-
 	"github.com/google/uuid"
 	"github.com/openstandia/goldap/message"
 	ldap "github.com/openstandia/ldapserver"
 	"golang.org/x/xerrors"
+	"log"
 )
 
 func handleSearch(s *Server, w ldap.ResponseWriter, m *ldap.Message) {
@@ -211,8 +210,6 @@ func responseEntry(s *Server, w ldap.ResponseWriter, m *ldap.Message, r message.
 				log.Printf("Already sent, ignore. attr: %s", a)
 				continue
 			}
-
-			log.Printf("- Attribute %s=%#v", a, values)
 
 			av := make([]message.AttributeValue, len(values))
 			for i, vv := range values {

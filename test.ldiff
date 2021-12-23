@@ -1,0 +1,9 @@
+dn: dc=tailor
+objectClass: dcObject
+objectClass: top
+objectClass: domain
+dc: Tailor root
+
+dn: ou=Employee,dc=tailor
+objectClass: organizationalUnit
+ou;lang-ja: 正社員

@@ -108,8 +108,12 @@ func (s *SchemaMap) ValidateObjectClass(ocs []string, attrs map[string]*SchemaVa
 				//   additional info: objectClass: value #0 invalid per syntax
 				return NewInvalidPerSyntax("objectClass", i)
 			}
-
-			if oc.Contains(k) {
+			if v == "alias" && (k == "cn" || k == "uid") {
+				contains = true
+				break
+			}
+			ks := strings.Split(k, ";")
+			if oc.Contains(ks[0]) {
 				contains = true
 				break
 			}
@@ -187,6 +191,7 @@ type AttributeType struct {
 	ColumnName         string
 	SingleValue        bool
 	NoUserModification bool
+	LanguageTag 	   string
 }
 
 type ObjectClass struct {
@@ -558,7 +563,13 @@ type SchemaValue struct {
 
 func NewSchemaValue(schemaMap *SchemaMap, attrName string, attrValue []string) (*SchemaValue, error) {
 	// TODO refactoring
-	s, ok := schemaMap.AttributeType(attrName)
+	name, lang, err := ParseLanguageTag(attrName)
+	if err != nil {
+		return nil, err
+	}
+
+	s, ok := schemaMap.AttributeType(name)
+	s.LanguageTag = lang
 	if !ok {
 		return nil, NewUndefinedType(attrName)
 	}
@@ -572,7 +583,7 @@ func NewSchemaValue(schemaMap *SchemaMap, attrName string, attrValue []string) (
 		value:  attrValue,
 	}
 
-	err := sv.normalize()
+	err = sv.normalize()
 	if err != nil {
 		return nil, err
 	}
@@ -582,6 +593,10 @@ func NewSchemaValue(schemaMap *SchemaMap, attrName string, attrValue []string) (
 
 func (s *SchemaValue) Name() string {
 	return s.schema.Name
+}
+
+func (s *SchemaValue) LanguageTag() string {
+	return s.schema.LanguageTag
 }
 
 func (s *SchemaValue) HasDuplicate(value *SchemaValue) bool {
