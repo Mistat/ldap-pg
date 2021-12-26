@@ -92,11 +92,13 @@ func (s *SchemaMap) ValidateObjectClass(ocs []string, attrs map[string]*SchemaVa
 	}
 
 	isAlias := false
+	if o, ok := attrs["objectClass"]; ok {
+		if _, ok := arrayContains(o.value, "alias"); ok {
+			isAlias = true
+		}
+	}
 	for k, sv := range attrs {
 		if k == "objectClass" {
-			if _, ok := arrayContains(sv.value, "alias"); ok {
-				isAlias = true
-			}
 			continue
 		}
 		if sv.IsNoUserModification() {
@@ -578,10 +580,10 @@ func NewSchemaValue(schemaMap *SchemaMap, attrName string, attrValue []string) (
 	}
 
 	s, ok := schemaMap.AttributeType(name)
-	s.LanguageTag = lang
 	if !ok {
 		return nil, NewUndefinedType(attrName)
 	}
+	s.LanguageTag = lang
 
 	if s.SingleValue && len(attrValue) > 1 {
 		return nil, NewMultipleValuesProvidedError(attrName)

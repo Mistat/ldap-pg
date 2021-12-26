@@ -1,5 +1,5 @@
 dn: uid=User00001,o=hc,dc=tailor,dc=tech
+aliasedObjectName: uid=User00001,ou=Employee,dc=tailor,dc=tech
 objectclass: top
 objectclass: alias
 objectclass: extensibleObject
-aliasedObjectName: uid=User00001,ou=Employee,dc=tailor,dc=tech

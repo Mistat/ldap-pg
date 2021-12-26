@@ -29,14 +29,13 @@ description: for Tailor tech organization
 dn: uid=User00001,ou=Employee,dc=tailor,dc=tech
 objectclass: top
 objectclass: person
-objectclass: employee
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 cn: 中村岳斗
 sn: 中村
 givenName: 岳斗
-birthday: 199512161032Z
-hireDate: 202012161032Z
+# birthday: 199512161032Z
+# hireDate: 202012161032Z
 userPassword: {SSHA}S9tGnbeShNGpWlItzk6PZlg5p7XwwyAd
 
 
