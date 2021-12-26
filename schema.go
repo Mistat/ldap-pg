@@ -91,8 +91,12 @@ func (s *SchemaMap) ValidateObjectClass(ocs []string, attrs map[string]*SchemaVa
 		return err
 	}
 
+	isAlias := false
 	for k, sv := range attrs {
 		if k == "objectClass" {
+			if _, ok := arrayContains(sv.value, "alias"); ok {
+				isAlias = true
+			}
 			continue
 		}
 		if sv.IsNoUserModification() {
@@ -108,12 +112,17 @@ func (s *SchemaMap) ValidateObjectClass(ocs []string, attrs map[string]*SchemaVa
 				//   additional info: objectClass: value #0 invalid per syntax
 				return NewInvalidPerSyntax("objectClass", i)
 			}
-			if v == "alias" && (k == "cn" || k == "uid") {
-				contains = true
-				break
+			name, _, err := ParseLanguageTag(k)
+			if err != nil {
+				return NewInvalidPerSyntax("tag", i)
 			}
-			ks := strings.Split(k, ";")
-			if oc.Contains(ks[0]) {
+			if isAlias {
+				if name == "uid" || name == "cn" {
+					contains = true
+					break
+				}
+			}
+			if oc.Contains(name) {
 				contains = true
 				break
 			}

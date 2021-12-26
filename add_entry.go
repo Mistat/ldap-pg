@@ -85,26 +85,22 @@ func (j *AddEntry) Add(attrName string, attrValue []string) error {
 
 func (j *AddEntry) addsv(value *SchemaValue) error {
 	name := value.Name()
-
-	current, ok := j.attributes[name]
-	if !ok {
-		j.attributes[name] = value
-		//return nil
-	} else {
-		// When adding the attribute with same value as both DN and attribute,
-		// we need to ignore the duplicate error.
-		current.Add(value)
+	add := func(n string, v *SchemaValue) {
+		current, ok := j.attributes[n]
+		if !ok {
+			j.attributes[n] = v
+			//return nil
+		} else {
+			// When adding the attribute with same value as both DN and attribute,
+			// we need to ignore the duplicate error.
+			current.Add(v)
+		}
 	}
+	add(name, value)
 	langTag := value.LanguageTag()
 	if langTag != "" {
 		name = name + ";" + langTag
-		current, ok := j.attributes[name]
-		if !ok {
-			j.attributes[name] = value
-			return nil
-		} else {
-			current.Add(value)
-		}
+		add(name, value)
 	}
 	return nil
 }

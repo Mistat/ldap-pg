@@ -206,7 +206,7 @@ func TestDiffDN(t *testing.T) {
 	for i, tc := range testcases {
 		add, del := diffDN(tc.a, tc.b)
 		if !reflect.DeepEqual(add, tc.AddExpected) {
-			t.Errorf("Unexpected error on %d:\nadd '%v' expected, got '%v'\n", i, tc.AddExpected, add)
+ 			t.Errorf("Unexpected error on %d:\nadd '%v' expected, got '%v'\n", i, tc.AddExpected, add)
 			continue
 		}
 		if !reflect.DeepEqual(del, tc.DelExpected) {

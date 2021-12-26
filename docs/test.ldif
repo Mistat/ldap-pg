@@ -1,0 +1,43 @@
+# ldapadd -H ldap://localhost:8389 -x -D cn=admin,dc=admin,dc=tailor -w password-f test.ldif
+
+# Root
+dn: dc=tech
+objectClass: top
+objectClass: dcObject
+objectClass: domain
+dc: .tech
+
+# Organization for Tailor
+dn: dc=tailor,dc=tech
+objectClass: dcObject
+objectClass: organization
+dc: Tailor tech organization
+o: Tailor tech organization
+description: for Tailor tech organization
+
+# Employee
+dn: ou=Employee,dc=tailor,dc=tech
+objectClass: organizationalUnit
+ou;lang-ja: 従業員
+
+# HC
+dn: o=hc,dc=tailor,dc=tech
+objectClass: organization
+o;lang-ja: 本部
+description: for Tailor tech organization
+
+dn: uid=User00001,ou=Employee,dc=tailor,dc=tech
+objectclass: top
+objectclass: person
+objectclass: employee
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: 中村岳斗
+sn: 中村
+givenName: 岳斗
+birthday: 199512161032Z
+hireDate: 202012161032Z
+userPassword: {SSHA}S9tGnbeShNGpWlItzk6PZlg5p7XwwyAd
+
+
+

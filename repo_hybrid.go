@@ -343,7 +343,6 @@ func (r *HybridRepository) Insert(ctx context.Context, entry *AddEntry) (int64, 
 		return 0, err
 	}
 
-
 	if entry.DN().Equal(r.server.Suffix) {
 		// Insert level 0
 		newID, err = r.insertLevel0(tx, dbEntry)
