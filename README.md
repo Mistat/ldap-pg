@@ -110,6 +110,7 @@ Options:
         Enable migration mode which means LDAP server accepts add/modify operational attributes (default false)
   -p int
         DB Port (default 5432)
+        If use unix socket set "0"
   -pass-through-ldap-bind-dn string
         Pass-through/LDAP: Bind DN
   -pass-through-ldap-domain string

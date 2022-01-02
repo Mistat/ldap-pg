@@ -37,13 +37,19 @@ type DBRepository struct {
 
 func NewRepository(server *Server) (Repository, error) {
 	// Init DB Connection
-	db, err := sqlx.Connect("postgres", fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable search_path=%s",
-		server.config.DBHostName, server.config.DBPort, server.config.DBUser, server.config.DBName,
-		server.config.DBPassword, server.config.DBSchema))
-	if err != nil {
-		log.Fatalf("alert: Connect error. host=%s, port=%d, user=%s, dbname=%s, error=%s",
-			server.config.DBHostName, server.config.DBPort, server.config.DBUser, server.config.DBName, err)
+	port := ""
+	if server.config.DBPort != 0 {
+	  port = fmt.Sprintf("port=%d", server.config.DBPort)
 	}
+	url := fmt.Sprintf("host=%s %s user=%s dbname=%s password=%s sslmode=disable search_path=%s",
+		server.config.DBHostName, port, server.config.DBUser, server.config.DBName,
+		server.config.DBPassword, server.config.DBSchema)
+	db, err := sqlx.Connect("postgres", url)
+	if err != nil {
+		log.Fatalf("alert: 2 Connect error. %s error=%s",
+			url, err)
+	}
+	log.Printf("info: %s", url)
 	db.SetMaxOpenConns(server.config.DBMaxOpenConns)
 	db.SetMaxIdleConns(server.config.DBMaxIdleConns)
 	// db.SetConnMaxLifetime(time.Hour)
