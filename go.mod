@@ -11,6 +11,7 @@ require (
 	github.com/lib/pq v1.10.3
 	github.com/openstandia/goldap/message v0.0.0-20191227184744-b5528a3af20f
 	github.com/openstandia/ldapserver v0.0.0-20210927020601-ef76358cbc4f
+	golang.org/x/crypto v0.0.0-20200604202706-70a84ac30bf9
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 	gopkg.in/asn1-ber.v1 v1.0.0-20181015200546-f715ec2f112d
 )
@@ -18,5 +19,5 @@ require (
 require (
 	github.com/Azure/go-ntlmssp v0.0.0-20200615164410-66371956d46c // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.1 // indirect
-	golang.org/x/crypto v0.0.0-20200604202706-70a84ac30bf9 // indirect
+	golang.org/x/sys v0.0.0-20190412213103-97732733099d // indirect
 )

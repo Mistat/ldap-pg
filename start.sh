@@ -1,6 +1,7 @@
 #!/bin/sh
+export
 ./bin/ldap-pg \
-  -acl ou=Users,dc=shidax:R:sn,userPassword \
+  -acl ou=Users,dc=talior:R:sn,userPassword \
   -h $DB_HOST \
   -u $DB_USERNAME \
   -w $DB_PASSWORD \
